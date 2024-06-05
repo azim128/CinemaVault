@@ -1,0 +1,53 @@
+services:
+  # MongoDB service
+  mongo:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ""
+      MONGO_INITDB_ROOT_PASSWORD: ""
+    ports:
+      - "27017:27017"
+    networks:
+      - mynetwork
+
+  # MongoDB visualization tool (optional)
+  mongo-viz:
+    image: mongo-express:latest
+    restart: unless-stopped
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: azim
+      ME_CONFIG_BASICAUTH_PASSWORD: example
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_SERVER: mongo
+
+  # Backend service
+  # backend:
+  #   build: ./backend
+  #   ports:
+  #     - 3000:3000
+  #   environment:
+  #     MONGO_URI: mongodb://mongo:27017/mydb
+  #   depends_on:
+  #     - mongo
+  #   networks:
+  #     - mynetwork
+
+# # Frontend service
+# frontend:
+#   build: ./frontend
+#   restart: unless-stopped
+#   ports:
+#     - 3001:80
+#   depends_on:
+#     - backend
+
+volumes:
+  mongo-data:
+
+networks:
+  mynetwork:
